@@ -1,0 +1,40 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class create : MonoBehaviour
+{
+    public GameObject prefab;
+    int count = 0;
+    void Start()
+    {
+
+        Invoke("createprefab", 0.5f);
+        
+    }
+  void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            GameObject cube = GameObject.Find("Cubepre(Clone)");
+            Destroy(cube, 0.8f);
+            cube.GetComponent<Rigidbody>();
+        }
+    }
+  void createprefab()
+    {
+        
+        
+        Vector3 pos = new Vector3(Mathf.Cos(count * (Mathf.PI * 2) / 10), 0, Mathf.Sin(count * (Mathf.PI * 2) / 10));
+        pos *= 5;//设置圆半径为5；
+        Instantiate(prefab, pos, Quaternion.identity);
+        count++;
+        if(count<10)
+        {
+            Invoke("createprefab", 0.5f);
+        }
+
+        
+    }
+
+}
