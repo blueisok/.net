@@ -1,0 +1,53 @@
+public class Enemy : MonoBehaviour
+{
+    //用于制作死亡效果
+    public GameObject prefabboom;
+    public float speed = 5;
+    public float maxhp = 5;
+    public float firetime = 0.1f;
+    bool dead = false;
+    Vector3 input;
+    //float hp;
+    GameObject player;
+    weapon wpon;
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");//获得标签为玩家的游戏对象
+        wpon = GetComponent<weapon>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        move();
+        fire();
+    }
+    void move()
+    {
+        input = player.transform.position - transform.position;
+        input = input.normalized;
+        transform.position += input * speed * Time.deltaTime;
+        if(input.magnitude>0.1f)
+        {
+            transform.forward = input;
+        }
+    }
+    void fire()
+    {
+        //一直开枪
+        wpon.fire(true, true);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("PlayerBullet"))
+        {
+            Destroy(other.gameObject);
+            maxhp--;
+            if(maxhp<=0)
+            {
+                dead = true;
+                Destroy(gameObject);
+            }
+        }
+    }
+}
