@@ -1,0 +1,81 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class weapon : MonoBehaviour
+{
+    public GameObject prefabbullet;
+    public float pistcd=0.5f;//手枪cd
+    public float lidcd=0.8f;//散弹枪cd
+    public float zdbqcd=0.3f;//自动步枪cd
+    float lasttime;//上次开火的时间
+    public int curgun { get; private set; }//当前使用的枪 0 手枪 1散弹枪 2自动步枪
+    public void fire(bool keydown,bool keypress)
+    {
+        switch(curgun)
+        {
+            case 0:
+                if(keydown)
+                {
+                    pistfire();
+                }
+                break;
+            case 1:
+                if(keydown)
+                {
+                    lidfire();
+                }
+                break;
+            case 2:
+                if(keypress)
+                {
+                    zdbqfire();
+                }
+                break;
+        }
+    }
+    public int changegun()
+    {
+        curgun += 1;
+        if(curgun==3)
+        {
+            curgun = 0;
+        }
+        return curgun;
+    }
+    public void pistfire()
+    {
+        if (lasttime + pistcd > Time.time)
+            return;
+        lasttime = Time.time;
+        GameObject bullet = Instantiate(prefabbullet, null);
+        bullet.transform.position = transform.position + transform.forward * 1.0f;
+        bullet.transform.forward = transform.forward;
+    }
+    public void zdbqfire()
+    {
+        if (lasttime + lidcd > Time.time)
+            return;
+        lasttime = Time.time;
+        GameObject bullet = Instantiate(prefabbullet, null);
+        bullet.transform.position = transform.position + transform.forward * 1.0f;
+        bullet.transform.forward = transform.forward;
+    }
+    //创建5颗子弹，相互间隔10°，分布前方的扇形
+    public void lidfire()
+    {
+        if (lasttime + zdbqcd > Time.time)
+            return;
+        lasttime = Time.time;
+        for(int i=-2;i<=2;i++)
+        {
+            GameObject bullet = Instantiate(prefabbullet, null);
+            Vector3 dir = Quaternion.Euler(0, i * 10, 0) * transform.forward;
+            bullet.transform.position = transform.position + dir * 1.0f;
+            bullet.transform.forward = dir;
+            //散弹射击距离短，修改子弹的生命周期
+            Bullet b = bullet.GetComponent<Bullet>();
+            b.lifetime = 0.3f;
+        }
+    }
+}
