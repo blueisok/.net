@@ -1,0 +1,79 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class player : MonoBehaviour
+{
+    public float speed = 3;
+    public float maxhp = 20;
+    Vector3 input;
+    float hp;//当前血量
+    bool dead = false;
+    weapon wpon;
+    void Start()
+    {
+        hp = maxhp;
+        wpon = GetComponent<weapon>();
+    }
+
+  
+    void Update()
+    {
+        input = new Vector3(Input.GetAxis("Vertical"), 0, -Input.GetAxis("Horizontal"));
+        bool firekeydown = Input.GetKeyDown(KeyCode.J);
+        bool firekeypress = Input.GetKey(KeyCode.J);
+        bool changeweapon = Input.GetKeyDown(KeyCode.Q);
+
+        if (!dead)
+        {
+            move();
+            wpon.fire(firekeydown, firekeypress);
+            if(changeweapon)
+            {
+                wpon.changegun();
+            }
+        }
+    }
+    void move()
+    {
+        //先归一数据，防止斜线速度超过最大速度
+        input = input.normalized;
+        transform.position += input*speed*Time.deltaTime;
+        //令角色前方与移动方向一致
+        if(input.magnitude>0.1f)
+        {
+            transform.forward = input;
+        }
+        Vector3 temp = transform.position;
+        const float con = 20;
+        if(transform.position.x>con)
+        {
+            temp.x = con;
+           
+        }
+        if(temp.x<-con)
+        {
+            temp.x = -con;
+        }
+        if(temp.z>con)
+        {
+            temp.z = con;
+        }
+        if(temp.z<-con)
+        {
+            temp.z = -con;
+        }
+        transform.position = temp;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("EnemyBullet"))
+        {
+            if (hp <= 0)
+                return;
+           hp--;
+            if (hp <= 0)
+                dead = true;
+        }
+    }
+}
