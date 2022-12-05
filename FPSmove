@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class fps : MonoBehaviour
+{
+    public float speed = 5f;
+    void Start()
+    {
+        //隐藏鼠标指针
+        Cursor.visible = false;
+        //锁定鼠标指针在屏幕中央
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        move();
+        mouselook();
+    }
+    void move()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        //角色永远在地上，不可以走到天上
+        Vector3 fr = transform.forward;
+        Vector3 f = new Vector3(fr.x, 0, fr.z).normalized;
+        Vector3 r = transform.right;
+        //移动向量
+        Vector3 move = f * z + r * x;
+        transform.position += move*speed*Time.deltaTime;
+
+    }
+    void mouselook()
+    {
+        float mx = Input.GetAxis("Mouse X");
+        float my = -Input.GetAxis("Mouse Y");
+        //视角水平移动
+        Quaternion qx = Quaternion.Euler(0, mx, 0);
+        //视角俯仰移动
+        Quaternion qy = Quaternion.Euler(my, 0, 0);
+        transform.rotation = qx * transform.rotation;
+        transform.rotation=qy* transform.rotation;
+        float angle = transform.eulerAngles.x;
+        if(angle>180)
+        {
+            angle -= 360;
+
+        }
+        if(angle>180)
+        {
+            angle += 360;
+        }
+        if(angle>80)
+        {
+            transform.eulerAngles = new Vector3(80, transform.eulerAngles.y, 0);
+            
+        }
+        if(angle<-80)
+        {
+            transform.eulerAngles = new Vector3(-80,transform.eulerAngles.y, 0);
+        }
+
+
+    }
+}
