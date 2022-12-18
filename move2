@@ -1,0 +1,35 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+public class isrun : MonoBehaviour
+{
+    private Animator animator;
+    public float speed=2;
+    // Start is called before the first frame update
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        Vector3 dir = new Vector3(h, 0, v);//方向向量
+        if(dir!=Vector3.zero)//方向向量不为空
+        {
+            //面向方向向量
+            transform.rotation = Quaternion.LookRotation(dir);
+            //播放跑的动画
+            animator.SetBool("isrun", true);
+          transform.Translate (transform.forward * speed * Time.deltaTime);
+        }
+        else
+        {
+            animator.SetBool("isrun", false);
+        }
+    }
+}
