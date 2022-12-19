@@ -1,0 +1,13 @@
+ private void OnAnimatorIK(int layerIndex)
+    {
+        //设置头部Ik
+        animator.SetLookAtWeight(1);
+        animator.SetLookAtPosition(target.position);
+        //设置左手IK权重
+        animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
+        animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+        //设置左手IK
+        animator.SetIKPosition(AvatarIKGoal.LeftHand, target.position);
+        animator.SetIKRotation(AvatarIKGoal.LeftHand, target.rotation);
+
+    }
