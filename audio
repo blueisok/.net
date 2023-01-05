@@ -1,0 +1,46 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AudioTest : MonoBehaviour
+{
+    public List<AudioClip> clips;
+           AudioSource audio;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        audio=GetComponent<AudioSource>();
+        audio.Stop();
+        audio.loop = false;
+        
+    }
+
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            //切换到音乐0
+            audio.clip = clips[0];
+            //播放
+            audio.Play();
+        }
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            audio.clip = clips[1];
+            audio.Play();
+        }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            if(audio.isPlaying)
+            {
+                audio.Pause();
+            }
+            else
+            {
+                audio.UnPause();
+            }
+        }
+    }
+}
